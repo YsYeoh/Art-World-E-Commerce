@@ -1,0 +1,101 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="global.Master.cs" Inherits="ArtWorld_Web.page.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>ArtWorld</title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="../css/global.css" rel="stylesheet" />
+    <!--Boostrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body class="d-flex flex-column min-vh-10">
+    <form id="form1" runat="server">
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+        <div id="header">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="../image/ArtWorld_logo.png" width="50" height="35" class="d-inline-block align-text-middle"/>
+                    ArtWorld Studio
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!--<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                    </ul>
+                    <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>-->
+                     <asp:Menu ID="mainMenu" runat="server" 
+                         Orientation="Horizontal" 
+                         EnableViewState="false"
+                         CssClass="nav navbar-fix-top" 
+                         StaticMenuStyle-CssClass="navbar-nav nav " 
+                         StaticSelectedStyle-CssClass="bg-secondary"
+                         RenderingMode="List"
+                         DynamicMenuStyle-CssClass="dropdown-menu"  
+                         DynamicMenuItemStyle-CssClass="dropdown"
+                         StaticMenuItemStyle-HorizontalPadding="17"
+                         DynamicEnableDefaultPopOutImage="true" 
+                         StaticEnableDefaultPopOutImage="false"
+                         StaticMenuItemStyle-BackColor=""
+                         StaticMenuItemStyle-ForeColor="Black"
+                         StaticMenuItemStyle-BorderStyle="Ridge"
+                         StaticMenuItemStyle-BorderWidth="1"
+                         StaticMenuItemStyle-BorderColor="LightGray"
+                         StaticMenuStyle-VerticalPadding="5"
+                         DataSourceID="SiteMapDataSource1"
+                         StaticDisplayLevels="2"
+                         DynamicDisplayLevels="2"
+                         >   
+<DynamicMenuItemStyle CssClass="dropdown"></DynamicMenuItemStyle>
+
+<DynamicMenuStyle CssClass="dropdown-menu"></DynamicMenuStyle>
+
+<StaticMenuItemStyle HorizontalPadding="17px" BackColor="" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Ridge" ForeColor="Black"></StaticMenuItemStyle>
+
+<StaticMenuStyle VerticalPadding="5px" CssClass="navbar-nav nav"></StaticMenuStyle>
+
+<StaticSelectedStyle CssClass="bg-secondary"></StaticSelectedStyle>
+                    </asp:Menu>
+                </div>
+                </div>
+            </nav>
+            
+        </div>
+        <div id="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <div id="footer" class="mt-auto text-center bg-light">
+        Developed by ArtWorld Studio &copy; 2022
+    </div>
+</body>
+</html>
