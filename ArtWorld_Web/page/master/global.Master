@@ -1,0 +1,231 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="global.Master.cs" Inherits="ArtWorld_Web.page.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>Welcome to Artworld Studio!</title>
+    <link rel="icon" href="../../image/ArtWorld_logo.png">
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="../../css/global.css" rel="stylesheet" />
+    <!--Boostrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <form id="form1" runat="server">
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+        <div id="header">
+            <nav id="navigation-bar" class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Navbar</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#Menu1" aria-controls="Menu1" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal" DataSourceID="SiteMapDataSource1" StaticDisplayLevels="2" CssClass="collapse navbar-collapse" EnableTheming="False" Enabled="True" EnableViewState="True">
+                        <DynamicMenuItemStyle CssClass="dropdown-item" />
+                        <StaticMenuItemStyle CssClass="nav-link" />
+                        <StaticMenuStyle CssClass="navbar-nav me-auto mb-2 mb-lg-0" />
+                    </asp:Menu>
+                </div>
+            </nav>
+        </div>
+        <div id="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <div id="footer" class="mt-auto text-center bg-light">
+        Developed by ArtWorld Studio &copy; 2022
+    </div>
+    <!--Jquery 3.5.1-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js"></script>
+    <script>
+       /* document.addEventListener("DOMContentLoaded", function (event) {
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
+
+        window.onbeforeunload = function (e) {
+            localStorage.setItem('scrollpos', window.scrollY);
+        };*/
+    </script>
+    <script type="text/javascript">
+        /*window.onbeforeunload = function () {
+            var scrollPos;
+            if (typeof window.pageYOffset != 'undefined') {
+                scrollPos = window.pageYOffset;
+            }
+            else if (typeof document.compatMode != 'undefined' && document.compatMode != 'BackCompat') {
+                scrollPos = document.documentElement.scrollTop;
+            }
+            else if (typeof document.body != 'undefined') {
+                scrollPos = document.body.scrollTop;
+            }
+            document.cookie = "scrollTop=" + scrollPos;
+        }
+        window.onload = function () {
+            if (document.cookie.match(/scrollTop=([^;]+)(;|$)/) != null) {
+                var arr = document.cookie.match(/scrollTop=([^;]+)(;|$)/);
+                document.documentElement.scrollTop = parseInt(arr[1]);
+                document.body.scrollTop = parseInt(arr[1]);
+            }
+        }*/
+        $(document).ready(function () {
+            var arr = document.querySelectorAll("input[type='checkbox']");
+            for (var i = 0; i < arr.length; i++) {
+                arr[i].setAttribute("onchange", "check()");
+                if (arr[i].checked) {
+                    
+                    var targetId = arr[i].id.split("_")[arr[i].id.split("_").length - 1];
+
+                    var price = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblPrice_" + targetId).innerText);
+                    var qty = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblQty_" + targetId).innerText);
+                    var totalPrice = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText);
+                    var totalSelected = parseInt(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText);
+                    totalPrice += price * qty;
+                    totalSelected += 1;
+                    document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText = totalPrice.toFixed(2);
+                    document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText = totalSelected;
+                }
+            }
+        });
+
+        function check() {
+            var targetId = event.target.id.split("_")[event.target.id.split("_").length-1];
+            
+            var price = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblPrice_" + targetId).innerText);
+            var qty = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblQty_" + targetId).innerText);
+            var totalPrice = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText);
+            var totalSelected = parseInt(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText);
+            if (event.target.checked) {
+                totalPrice += price * qty;
+                totalSelected += 1;
+            }
+            else {
+                totalPrice -= price * qty;
+                totalSelected -= 1;
+            }
+            document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText = totalPrice.toFixed(2);
+            document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText = totalSelected;
+            console.log(totalPrice, totalSelected);
+        }
+        
+        $(document).ready(function () {
+            
+
+            var nav = document.getElementById("navigation-bar");
+            console.log(nav);
+            //Div el create by menu control, remove the style
+            nav.children[0].children[3].setAttribute("style", "");
+            //ul el create by menu control, remove the style
+            nav.children[0].children[3].children[0].setAttribute("style", "");
+
+            nav.children[0].children[5].remove();
+            nav.children[0].children[4].remove();
+            //<li> for each nav item
+            var navItemEl = nav.children[0].children[3].children[0].children;
+            for (var i = 0; i < navItemEl.length; i++) {
+                
+                navItemEl[i].setAttribute("style", "");
+
+                if (navItemEl[i].children.length == 2) {
+                    navItemEl[i].setAttribute("aria-haspopup", "");
+                    navItemEl[i].setAttribute("class", "nav-item dropdown");
+                    navItemEl[i].children[0].setAttribute("class", "nav-link dropdown-toggle");
+                    navItemEl[i].children[0].setAttribute("role", "button");
+                    navItemEl[i].children[0].setAttribute("id", navItemEl[i].children[1].getAttribute("id"));
+                    navItemEl[i].children[0].setAttribute("data-bs-toggle", "dropdown");
+                    navItemEl[i].children[0].setAttribute("aria-expanded", "false");
+                    navItemEl[i].children[1].setAttribute("style","");
+                    navItemEl[i].children[1].setAttribute("aria-labelledby", navItemEl[i].children[1].getAttribute("id"));
+                    navItemEl[i].children[1].setAttribute("id", "");
+                    navItemEl[i].children[1].setAttribute("style", "");
+                    for (var i = 0; i < navItemEl[i].children[1].children.length; i++) {
+                        navItemEl[i].children[1].children[i].setAttribute("style", "");
+                    }
+                }
+            }
+
+            nav.children[0].children[2].remove();
+        })
+    </script>
+</body>
+</html>
+
+<!--<div id="header">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="../image/ArtWorld_logo.png" width="50" height="35" class="d-inline-block align-text-middle"/>
+                    ArtWorld Studio
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                    </ul>
+                    <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                     <asp:Menu 
+                         Orientation="Horizontal" 
+                         EnableViewState="false"
+                         CssClass="nav navbar-fix-top" 
+                         StaticMenuStyle-CssClass="navbar-nav nav " 
+                         StaticSelectedStyle-CssClass="bg-secondary"
+                         RenderingMode="List"
+                         DynamicMenuStyle-CssClass="dropdown-menu"  
+                         DynamicMenuItemStyle-CssClass="dropdown"
+                         StaticMenuItemStyle-HorizontalPadding="17"
+                         DynamicEnableDefaultPopOutImage="true" 
+                         StaticEnableDefaultPopOutImage="false"
+                         StaticMenuItemStyle-BackColor=""
+                         StaticMenuItemStyle-ForeColor="Black"
+                         StaticMenuItemStyle-BorderStyle="Ridge"
+                         StaticMenuItemStyle-BorderWidth="1"
+                         StaticMenuItemStyle-BorderColor="LightGray"
+                         StaticMenuStyle-VerticalPadding="5"
+                         DataSourceID="SiteMapDataSource1"
+                         StaticDisplayLevels="2"
+                         DynamicDisplayLevels="2"
+                         >   
+<DynamicMenuItemStyle CssClass="dropdown"></DynamicMenuItemStyle>
+
+<DynamicMenuStyle CssClass="dropdown-menu"></DynamicMenuStyle>
+
+<StaticMenuItemStyle HorizontalPadding="17px" BackColor="" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Ridge" ForeColor="Black"></StaticMenuItemStyle>
+
+<StaticMenuStyle VerticalPadding="5px" CssClass="navbar-nav nav"></StaticMenuStyle>
+
+<StaticSelectedStyle CssClass="bg-secondary"></StaticSelectedStyle>
+                    </asp:Menu>
+                </div>
+                </div>
+            </nav>
+            
+        </div>-->
