@@ -1,0 +1,290 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="global.Master.cs" Inherits="ArtWorld_Web.page.Site1" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <title>Welcome to Artworld Studio!</title>
+    <link rel="icon" href="../../image/ArtWorld_logo.png">
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <link href="../../css/global.css" rel="stylesheet" />
+    <link href="../../css/login.css" rel="stylesheet" />
+    <!--Boostrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <form id="form1" runat="server">
+        <asp:SiteMapDataSource ID="SiteMapDataSource1" runat="server" />
+        <div id="header">
+            <nav id="navigation-bar" class="navbar navbar-expand-md navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="../../image/ArtWorld_logo.png" width="50"/>
+                        Artworld Studio
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#Menu1" aria-controls="Menu1" aria-expanded="false" aria-label="Toggle navigation">
+                      <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <asp:Menu ID="Menu1" runat="server" 
+                        Orientation="Horizontal" 
+                        DataSourceID="SiteMapDataSource1" 
+                        StaticDisplayLevels="2" 
+                        CssClass="collapse navbar-collapse" 
+                        IncludeStyleBlock="True">
+                        <DynamicSelectedStyle CssClass="active" />
+                        <DynamicMenuItemStyle CssClass="dropdown-item" />
+                        <DynamicMenuStyle CssClass="dropdown-menu" />
+                        <StaticSelectedStyle CssClass="active" />
+                        <StaticMenuItemStyle CssClass="nav-link ps-3 pe-3" />
+                        <StaticMenuStyle CssClass="navbar-nav me-auto mb-2 mb-lg-0" />
+                    </asp:Menu>
+                    
+                </div>
+            </nav>
+        </div>
+        <div id="content">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+    <div id="footer" class="mt-auto text-center bg-light">
+        Developed by ArtWorld Studio &copy; 2022
+    </div>
+    <!--Jquery 3.5.1-->
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+
+        //Script for cart page, calculate total price and total number of item
+        $(document).ready(function () {
+            var arr = document.querySelectorAll("input[type='checkbox']");
+            for (var i = 0; i < arr.length; i++) {
+                arr[i].setAttribute("onchange", "check()");
+                if (arr[i].checked) {
+                    
+                    var targetId = arr[i].id.split("_")[arr[i].id.split("_").length - 1];
+
+                    var price = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblPrice_" + targetId).innerText);
+                    var qty = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblQty_" + targetId).innerText);
+                    var totalPrice = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText);
+                    var totalSelected = parseInt(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText);
+                    totalPrice += price * qty;
+                    totalSelected += 1;
+                    document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText = totalPrice.toFixed(2);
+                    document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText = totalSelected;
+                }
+            }
+        });
+
+        function check() {
+            var targetId = event.target.id.split("_")[event.target.id.split("_").length-1];
+            
+            var price = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblPrice_" + targetId).innerText);
+            var qty = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblQty_" + targetId).innerText);
+            var totalPrice = parseFloat(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText);
+            var totalSelected = parseInt(document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText);
+            if (event.target.checked) {
+                totalPrice += price * qty;
+                totalSelected += 1;
+            }
+            else {
+                totalPrice -= price * qty;
+                totalSelected -= 1;
+            }
+            document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalPrice").innerText = totalPrice.toFixed(2);
+            document.getElementById("ContentPlaceHolder1_Repeater1_lblTotalSelected").innerText = totalSelected;
+            console.log(totalPrice, totalSelected);
+        }
+
+        //Nav Bar
+        $(document).ready(function () {
+            document.querySelector('a[href="#Menu1_SkipLink"]').remove();
+            document.querySelector('#Menu1_SkipLink').remove();
+            document.querySelector('div[style="clear: left;"]').remove();
+        })
+
+        //Apply boostrap style to input control
+        $(document).ready(function () {
+            if (document.getElementById("profile") != null) {
+                const queryString = window.location.search;
+
+                const urlParams = new URLSearchParams(queryString);
+
+                const status = urlParams.get('status');
+                if (status === "unsuccess") {
+                    document.getElementById("openModalEditUnsuccess").click();
+                }
+                else if (status === "success"){
+                    document.getElementById("openModalEditSuccess").click();
+                }
+
+
+                if (document.getElementById("rblGenderContainer") != null) {
+                    var genderContainerChild = document.getElementById("rblGenderContainer").children;
+                    if (genderContainerChild.length != 0) {
+                        //table -> tbody -> tr-1
+                        var trElementChild = genderContainerChild[1].children[0].children[0].children;
+                        for (let i = 0; i < trElementChild.length; i++) {
+                            trElementChild[i].setAttribute("class", "form-check form-check-inline");
+                            var inputEl = trElementChild[i].children[0];
+                            var labelEl = trElementChild[i].children[1];
+                            inputEl.setAttribute("class", "form-check-input");
+                            labelEl.setAttribute("class", "form-check-label");
+                            var inputElId = inputEl.getAttribute("id");
+                            labelEl.setAttribute("for", inputElId);
+                        }
+                    }
+                }
+
+                if (document.getElementById("cbTncContainer") != null) {
+                    var tncContainerChild = document.getElementById("cbTncContainer").children;
+                    if (tncContainerChild.length != 0) {
+                        tncContainerChild[0].setAttribute("class", "form-check-input");
+                        tncContainerChild[0].setAttribute("required", true);
+                        var rbTncId = tncContainerChild[0].getAttribute("id");
+                        tncContainerChild[1].setAttribute("for", rbTncId);
+                    }
+                }
+
+                if (document.getElementById("txtContactContainer") != null) {
+                    var contactContainerChild = document.getElementById("txtContactContainer").children;
+                    if (contactContainerChild != 0) {
+                        var txtContactId = contactContainerChild[1].children[1].children[0].getAttribute("id");
+                        contactContainerChild[0].setAttribute("for", txtContactId);
+                    }
+                }
+
+                var arrEl = ["txtNameContainer", "txtNicknameContainer", "txtBirthContainer", "txtAddress1Container",
+                    "txtAddress2Container", "selectStateContainer", "txtPostcodeContainer", "txtCityContainer",
+                    "txtEmailContainer", "txtPassword1Container", "txtPassword2Container"];
+
+
+                for (var i = 0; i < arrEl.length; i++) {
+                    if (document.getElementById(arrEl[i]) != null) {
+                        var containerChild = document.getElementById(arrEl[i]).children;
+                        if (containerChild.length != 0) {
+                            if (arrEl[i] === "txtPassword1Container") {
+                                passwordElId = containerChild[1].getAttribute("id");
+                                containerChild[1].setAttribute("oninput", "pwStrength()")
+                            }
+                            var ElId = containerChild[1].getAttribute("id");
+                            if (ElId != null) {
+                                containerChild[0].setAttribute("for", ElId);
+                            }
+                        }
+                    }
+                }
+            }
+            if (document.getElementById("changePassword") != null) {
+                const queryString = window.location.search;
+
+                const urlParams = new URLSearchParams(queryString);
+
+                const status = urlParams.get('status');
+                if (status === "unsuccess") {
+                    document.getElementById("openModalChangePWUnsuccess").click();
+                }
+                else if (status === "success") {
+                    document.getElementById("openModalChangePWSuccess").click();
+                }
+
+                var arrEl = ["txtPassword1Container", "txtPassword2Container"];
+
+                for (var i = 0; i < arrEl.length; i++) {
+                    if (document.getElementById(arrEl[i]) != null) {
+                        var containerChild = document.getElementById(arrEl[i]).children;
+                        if (containerChild.length != 0) {
+                            if (arrEl[i] === "txtPassword1Container") {
+                                passwordElId = containerChild[1].getAttribute("id");
+                                containerChild[1].setAttribute("oninput", "pwStrength()")
+                            }
+                            var ElId = containerChild[1].getAttribute("id");
+                            if (ElId != null) {
+                                containerChild[0].setAttribute("for", ElId);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
+
+<!--<div id="header">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="../image/ArtWorld_logo.png" width="50" height="35" class="d-inline-block align-text-middle"/>
+                    ArtWorld Studio
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                    </ul>
+                    <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                     <asp:Menu 
+                         Orientation="Horizontal" 
+                         EnableViewState="false"
+                         CssClass="nav navbar-fix-top" 
+                         StaticMenuStyle-CssClass="navbar-nav nav " 
+                         StaticSelectedStyle-CssClass="bg-secondary"
+                         RenderingMode="List"
+                         DynamicMenuStyle-CssClass="dropdown-menu"  
+                         DynamicMenuItemStyle-CssClass="dropdown"
+                         StaticMenuItemStyle-HorizontalPadding="17"
+                         DynamicEnableDefaultPopOutImage="true" 
+                         StaticEnableDefaultPopOutImage="false"
+                         StaticMenuItemStyle-BackColor=""
+                         StaticMenuItemStyle-ForeColor="Black"
+                         StaticMenuItemStyle-BorderStyle="Ridge"
+                         StaticMenuItemStyle-BorderWidth="1"
+                         StaticMenuItemStyle-BorderColor="LightGray"
+                         StaticMenuStyle-VerticalPadding="5"
+                         DataSourceID="SiteMapDataSource1"
+                         StaticDisplayLevels="2"
+                         DynamicDisplayLevels="2"
+                         >   
+<DynamicMenuItemStyle CssClass="dropdown"></DynamicMenuItemStyle>
+
+<DynamicMenuStyle CssClass="dropdown-menu"></DynamicMenuStyle>
+
+<StaticMenuItemStyle HorizontalPadding="17px" BackColor="" BorderColor="LightGray" BorderWidth="1px" BorderStyle="Ridge" ForeColor="Black"></StaticMenuItemStyle>
+
+<StaticMenuStyle VerticalPadding="5px" CssClass="navbar-nav nav"></StaticMenuStyle>
+
+<StaticSelectedStyle CssClass="bg-secondary"></StaticSelectedStyle>
+                    </asp:Menu>
+                </div>
+                </div>
+            </nav>
+            
+        </div>-->
